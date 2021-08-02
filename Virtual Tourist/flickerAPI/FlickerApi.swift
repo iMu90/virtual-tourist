@@ -37,11 +37,11 @@ class FlickerApi {
                 return
             }
             
-            let range = 5..<data.count
-            let newData = data.subdata(in: range)
+//            let range = 5..<data.count
+//            let newData = data.subdata(in: range)
 //            print("new Data: \(newData)")
             do {
-                let responseObject = try self.decoder.decode(Photos.self, from: newData)
+                let responseObject = try self.decoder.decode(Photos.self, from: data)
                 print("data: \(responseObject)")
 
             } catch {

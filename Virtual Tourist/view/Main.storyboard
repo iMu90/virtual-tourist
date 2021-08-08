@@ -64,6 +64,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="HU6-d6-6CJ">
+                                <rect key="frame" x="197" y="438" width="20" height="20"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </activityIndicatorView>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="cnN-8L-dzo">
                                 <rect key="frame" x="0.0" y="88" width="414" height="200"/>
                                 <constraints>
@@ -130,6 +134,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="b6P-fG-wKO"/>
                     <connections>
+                        <outlet property="activityIndicator" destination="HU6-d6-6CJ" id="5o7-35-4St"/>
                         <outlet property="collectionView" destination="c40-nr-XIe" id="e0l-Sq-qOa"/>
                         <outlet property="flowLayout" destination="zOV-Nf-68K" id="TCG-Md-gzn"/>
                         <outlet property="mapOutlet" destination="cnN-8L-dzo" id="aSI-fS-M7W"/>

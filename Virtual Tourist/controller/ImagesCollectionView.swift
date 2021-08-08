@@ -15,6 +15,7 @@ class ImagesCollectionView: UIViewController, NSFetchedResultsControllerDelegate
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var mapOutlet: MKMapView!
     @IBOutlet weak var newCollectionBtnOutlet: UIButton!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
     
@@ -29,6 +30,7 @@ class ImagesCollectionView: UIViewController, NSFetchedResultsControllerDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        activityIndicator.startAnimating()
         collectionView.delegate = self
         collectionView.dataSource = self
         let annotation = MKPointAnnotation()
@@ -45,6 +47,7 @@ class ImagesCollectionView: UIViewController, NSFetchedResultsControllerDelegate
     
     func loadImagesFromFlicker() {
         pageNumber += 1
+        
         flickerApi.getImages(location: location, pageNumber: pageNumber) { success, data, error in
             if error != nil || !success {
                 self.generateAlert(title: "ERROR", message: "OPS! could not load Images", actionTitle: "OK")
@@ -66,13 +69,17 @@ class ImagesCollectionView: UIViewController, NSFetchedResultsControllerDelegate
                                     img.url = imgUrl
                                     img.location = self.location
                                     self.location.addToImages(img)
+                                    
                                 } else {
                                     print("data not saved")
                                 }
+                                self.reloadImages()
+                            }
+                            DispatchQueue.main.async {
+                                self.newCollectionBtnOutlet.isEnabled = true
+                                self.activityIndicator.stopAnimating()
                             }
                             
-                            try? self.dataController.viewContext.save()
-            
                         }
                     }
                     
@@ -81,6 +88,9 @@ class ImagesCollectionView: UIViewController, NSFetchedResultsControllerDelegate
                 }
             }
         }
+        
+        try? self.dataController.viewContext.save()
+        
     }
     
     func fetchLocations() {
@@ -90,13 +100,14 @@ class ImagesCollectionView: UIViewController, NSFetchedResultsControllerDelegate
             if savedImage.count == 0 {
                 print("no images, fetching api")
                 loadImagesFromFlicker()
+//                self.collectionView.reloadData()
                 
+            } else {
+                self.activityIndicator.stopAnimating()
             }
         } catch {
             print("cannot fetch saved content")
         }
-        
-        reloadImages()
     }
     
     fileprivate func setupFetchedResultsController() {
@@ -118,8 +129,13 @@ class ImagesCollectionView: UIViewController, NSFetchedResultsControllerDelegate
     
     
     @IBAction func newCollectionBtn(_ sender: Any) {
-        location.images = []
-        fetchLocations()
+        activityIndicator.startAnimating()
+        newCollectionBtnOutlet.isEnabled = false
+        if let imgs = location.images {
+            location.removeFromImages(imgs)
+            fetchLocations()
+//            reloadImages()
+        }
         
     }
     
@@ -134,7 +150,10 @@ class ImagesCollectionView: UIViewController, NSFetchedResultsControllerDelegate
 
 extension ImagesCollectionView: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        print("here we have \(location.images?.count ?? 0)")
+        
         return location.images?.count ?? 0
+        
     }
     
     
@@ -144,6 +163,8 @@ extension ImagesCollectionView: UICollectionViewDataSource, UICollectionViewDele
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "imgCollectionCell", for: indexPath) as! CollectionViewCell
+        
+        
         
         if let data = location.images {
             let array = data.allObjects

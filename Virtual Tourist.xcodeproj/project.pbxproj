@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		D9A1486526B236080064E17A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A1486426B236080064E17A /* AppDelegate.swift */; };
-		D9A1486726B236080064E17A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A1486626B236080064E17A /* SceneDelegate.swift */; };
 		D9A1486926B236080064E17A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A1486826B236080064E17A /* ViewController.swift */; };
 		D9A1486E26B236090064E17A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D9A1486D26B236090064E17A /* Assets.xcassets */; };
 		D9A1487126B236090064E17A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D9A1486F26B236090064E17A /* LaunchScreen.storyboard */; };
@@ -16,12 +15,15 @@
 		D9D9555F26B250E900E0526F /* ImagesCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9D9555E26B250E900E0526F /* ImagesCollectionView.swift */; };
 		D9D9556226B2585E00E0526F /* FlickerApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9D9556126B2585E00E0526F /* FlickerApi.swift */; };
 		D9D9556526B7C1F700E0526F /* Photos.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9D9556426B7C1F700E0526F /* Photos.swift */; };
+		D9D9556826B7FA1600E0526F /* GenerateAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9D9556726B7FA1600E0526F /* GenerateAlert.swift */; };
+		D9D9556F26BB718B00E0526F /* Location.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D9D9556D26BB718B00E0526F /* Location.xcdatamodeld */; };
+		D9D9557126BB74DE00E0526F /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9D9557026BB74DE00E0526F /* CollectionViewCell.swift */; };
+		D9D9557326BCB68700E0526F /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9D9557226BCB68700E0526F /* DataController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		D9A1486126B236080064E17A /* Virtual Tourist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Virtual Tourist.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9A1486426B236080064E17A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		D9A1486626B236080064E17A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		D9A1486826B236080064E17A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		D9A1486D26B236090064E17A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D9A1487026B236090064E17A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -30,6 +32,10 @@
 		D9D9555E26B250E900E0526F /* ImagesCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesCollectionView.swift; sourceTree = "<group>"; };
 		D9D9556126B2585E00E0526F /* FlickerApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickerApi.swift; sourceTree = "<group>"; };
 		D9D9556426B7C1F700E0526F /* Photos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photos.swift; sourceTree = "<group>"; };
+		D9D9556726B7FA1600E0526F /* GenerateAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateAlert.swift; sourceTree = "<group>"; };
+		D9D9556E26BB718B00E0526F /* Location.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Location.xcdatamodel; sourceTree = "<group>"; };
+		D9D9557026BB74DE00E0526F /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
+		D9D9557226BCB68700E0526F /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,10 +68,11 @@
 		D9A1486326B236080064E17A /* Virtual Tourist */ = {
 			isa = PBXGroup;
 			children = (
+				D9D9556C26BB716C00E0526F /* coreData */,
+				D9D9556626B7F9F700E0526F /* utils */,
 				D9D9556326B7C1DB00E0526F /* modal */,
 				D9D9556026B2583B00E0526F /* flickerAPI */,
 				D9A1486426B236080064E17A /* AppDelegate.swift */,
-				D9A1486626B236080064E17A /* SceneDelegate.swift */,
 				D9D9555D26B248F400E0526F /* controller */,
 				D9A1487D26B2470B0064E17A /* view */,
 				D9A1487226B236090064E17A /* Info.plist */,
@@ -88,6 +95,7 @@
 			children = (
 				D9A1486826B236080064E17A /* ViewController.swift */,
 				D9D9555E26B250E900E0526F /* ImagesCollectionView.swift */,
+				D9D9557026BB74DE00E0526F /* CollectionViewCell.swift */,
 			);
 			path = controller;
 			sourceTree = "<group>";
@@ -106,6 +114,23 @@
 				D9D9556426B7C1F700E0526F /* Photos.swift */,
 			);
 			path = modal;
+			sourceTree = "<group>";
+		};
+		D9D9556626B7F9F700E0526F /* utils */ = {
+			isa = PBXGroup;
+			children = (
+				D9D9556726B7FA1600E0526F /* GenerateAlert.swift */,
+			);
+			path = utils;
+			sourceTree = "<group>";
+		};
+		D9D9556C26BB716C00E0526F /* coreData */ = {
+			isa = PBXGroup;
+			children = (
+				D9D9556D26BB718B00E0526F /* Location.xcdatamodeld */,
+				D9D9557226BCB68700E0526F /* DataController.swift */,
+			);
+			path = coreData;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -180,9 +205,12 @@
 			files = (
 				D9D9556526B7C1F700E0526F /* Photos.swift in Sources */,
 				D9A1486926B236080064E17A /* ViewController.swift in Sources */,
+				D9D9557126BB74DE00E0526F /* CollectionViewCell.swift in Sources */,
+				D9D9556826B7FA1600E0526F /* GenerateAlert.swift in Sources */,
 				D9A1486526B236080064E17A /* AppDelegate.swift in Sources */,
+				D9D9557326BCB68700E0526F /* DataController.swift in Sources */,
 				D9D9555F26B250E900E0526F /* ImagesCollectionView.swift in Sources */,
-				D9A1486726B236080064E17A /* SceneDelegate.swift in Sources */,
+				D9D9556F26BB718B00E0526F /* Location.xcdatamodeld in Sources */,
 				D9D9556226B2585E00E0526F /* FlickerApi.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -375,6 +403,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		D9D9556D26BB718B00E0526F /* Location.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				D9D9556E26BB718B00E0526F /* Location.xcdatamodel */,
+			);
+			currentVersion = D9D9556E26BB718B00E0526F /* Location.xcdatamodel */;
+			path = Location.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = D9A1485926B236080064E17A /* Project object */;
 }

@@ -81,18 +81,16 @@ class ImagesCollectionView: UIViewController, NSFetchedResultsControllerDelegate
                 }
             }
         }
-        
     }
     
     func fetchLocations() {
         let fetchRequest:NSFetchRequest<Images> = fetchedResultsController.fetchRequest
         do {
             let savedImage = try dataController.viewContext.fetch(fetchRequest)
-            if savedImage.count > 0 {
-                print("count: \(savedImage.count)")
-                
-            } else {
+            if savedImage.count == 0 {
+                print("no images, fetching api")
                 loadImagesFromFlicker()
+                
             }
         } catch {
             print("cannot fetch saved content")
@@ -120,18 +118,22 @@ class ImagesCollectionView: UIViewController, NSFetchedResultsControllerDelegate
     
     
     @IBAction func newCollectionBtn(_ sender: Any) {
-        pageNumber += 1
+        location.images = []
+        fetchLocations()
+        
     }
     
     
     func reloadImages() {
-        collectionView.reloadData()
+        DispatchQueue.main.async {
+            self.collectionView.reloadData()
+        }
+
     }
 }
 
-extension ImagesCollectionView: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension ImagesCollectionView: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print("number of items: \(location.images?.count ?? 0)")
         return location.images?.count ?? 0
     }
     
@@ -158,7 +160,7 @@ extension ImagesCollectionView: UICollectionViewDataSource, UICollectionViewDele
             
             let selected = array[indexPath.row] as! Images
             location.removeFromImages(selected)
-            collectionView.reloadData()
+            reloadImages()
         }
     }
     

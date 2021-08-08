@@ -13,6 +13,7 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
 
     @IBOutlet weak var mapOutlet: MKMapView!
     var locations: [GeoLocation] = []
+    var location: GeoLocation = GeoLocation()
     
 //    let flickerApi = FlickerApi()
     var dataController:DataController!
@@ -39,42 +40,39 @@ class ViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDe
             mapOutlet.addAnnotation(annotation)
             
             self.savePinLocation(lat: String(coordinate.latitude), lon: String(coordinate.longitude))
-            
-//            flickerApi.getImages(lat: String(coordinate.latitude), long: String(coordinate.longitude), pageNumber: 1) {(success, photos, error) in
-//                if !success || error != nil {
-//                    self.generateAlert(title: "ERROR!", message: "OOPS, Something went Wrong!", actionTitle: "OK")
-//                } else {
-//                    self.performSegue(withIdentifier: "imgCollectionSegue", sender: nil)
-//                }
-//            }
         }
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         let selected = view.annotation
-        print("location clicked: \(selected?.coordinate.latitude)")
         for location in locations {
             let lat = CLLocationDegrees(location.latitude!)
             let long = CLLocationDegrees(location.longitude!)
             if lat == selected?.coordinate.latitude && long == selected?.coordinate.longitude {
-                
                 let collectionView = storyboard?.instantiateViewController(identifier: "collectionView") as! ImagesCollectionView
                 collectionView.location = location
                 collectionView.dataController = dataController
-                present(collectionView, animated: true, completion: nil)
+                self.location = location
+                performSegue(withIdentifier: "imgCollectionSegue", sender: self)
             }
         }
     }
     
-    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let controller = segue.destination as! ImagesCollectionView
+        controller.location = location
+        controller.dataController = dataController
+        
+    }
     
     func savePinLocation(lat: String, lon: String) {
         let location = GeoLocation(context: dataController.viewContext)
         location.latitude = lat
         location.longitude = lon
         location.images = []
-        
         try? dataController.viewContext.save()
+        
+        fetchLocations()
     }
     
     func fetchLocations() {

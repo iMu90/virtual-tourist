@@ -9,8 +9,8 @@ import Foundation
 import UIKit
 
 class FlickerApi {
-    let API_KEY: String = "API_KEY"
-    let API_SECRET: String = "API_SECRET"
+    let API_KEY: String = "9679fec065a90d05de2a8b9631248555"
+    let API_SECRET: String = "502b01bbcf52a44e"
     let NUMBER_OF_IMAGES_PER_PAGE: Int = 10
     let API_METHOD: String = "flickr.photos.search"
     let decoder = JSONDecoder()

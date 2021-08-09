@@ -4,21 +4,20 @@
 //
 //  Created by Muteb Alolayan on 29/07/2021.
 //
-
 import Foundation
 import UIKit
 import MapKit
 import CoreData
 
-class ImagesCollectionView: UIViewController, NSFetchedResultsControllerDelegate {
+class ImagesCollectionView: UIViewController, NSFetchedResultsControllerDelegate, MKMapViewDelegate {
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var mapOutlet: MKMapView!
     @IBOutlet weak var newCollectionBtnOutlet: UIButton!
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+//    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
-    
+    var numberOfImages = 10
     let flickerApi = FlickerApi()
     var pageNumber = 0
         
@@ -30,9 +29,10 @@ class ImagesCollectionView: UIViewController, NSFetchedResultsControllerDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        activityIndicator.startAnimating()
+//        activityIndicator.startAnimating()
         collectionView.delegate = self
         collectionView.dataSource = self
+        mapOutlet.delegate = self
         let annotation = MKPointAnnotation()
         let lat = CLLocationDegrees(location.latitude!)
         let long = CLLocationDegrees(location.longitude!)
@@ -47,7 +47,7 @@ class ImagesCollectionView: UIViewController, NSFetchedResultsControllerDelegate
     
     func loadImagesFromFlicker() {
         pageNumber += 1
-        
+//        activityIndicator.startAnimating()
         flickerApi.getImages(location: location, pageNumber: pageNumber) { success, data, error in
             if error != nil || !success {
                 self.generateAlert(title: "ERROR", message: "OPS! could not load Images", actionTitle: "OK")
@@ -57,31 +57,22 @@ class ImagesCollectionView: UIViewController, NSFetchedResultsControllerDelegate
                     if let images = data?.photos.photo {
                         for photo in images {
                             let imgUrl = "https://live.staticflickr.com/\(photo.server)/\(photo.id)_\(photo.secret)_w.jpg"
-                            self.flickerApi.downloadImg(url: imgUrl) { data, error in
-                                guard error == nil else {
-                                    self.generateAlert(title: "ERROR", message: "something went wrong", actionTitle: "OK")
-                                    return
-                                }
-                                if let data = data {
-                                    let img = Images(context: self.dataController.viewContext)
-                                    img.data = data
-                                    img.name = photo.title
-                                    img.url = imgUrl
-                                    img.location = self.location
-                                    self.location.addToImages(img)
-                                    
-                                } else {
-                                    print("data not saved")
-                                }
-                                self.reloadImages()
-                            }
+                            let img = Images(context: self.dataController.viewContext)
+                            img.url = imgUrl
+                            img.name = photo.title
+                            img.location = self.location
+                            self.location.addToImages(img)
                             DispatchQueue.main.async {
                                 self.newCollectionBtnOutlet.isEnabled = true
-                                self.activityIndicator.stopAnimating()
+//                                self.activityIndicator.stopAnimating()
                             }
                             
                         }
                     }
+                    
+                    self.reloadImages()
+                    
+                    
                     
                 } else {
                     print("no returned image: \(String(describing: data?.photos.photo.count))")
@@ -93,6 +84,26 @@ class ImagesCollectionView: UIViewController, NSFetchedResultsControllerDelegate
         
     }
     
+    
+    // TAKING FROM UDACITY MENTOR/REVIEWER 
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+
+        let reuseId = "pin"
+
+        var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
+
+        if pinView == nil {
+            pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
+            pinView!.pinTintColor = .red
+        }
+        else {
+            pinView!.annotation = annotation
+        }
+
+
+        return pinView
+    }
+    
     func fetchLocations() {
         let fetchRequest:NSFetchRequest<Images> = fetchedResultsController.fetchRequest
         do {
@@ -100,10 +111,7 @@ class ImagesCollectionView: UIViewController, NSFetchedResultsControllerDelegate
             if savedImage.count == 0 {
                 print("no images, fetching api")
                 loadImagesFromFlicker()
-//                self.collectionView.reloadData()
                 
-            } else {
-                self.activityIndicator.stopAnimating()
             }
         } catch {
             print("cannot fetch saved content")
@@ -129,7 +137,7 @@ class ImagesCollectionView: UIViewController, NSFetchedResultsControllerDelegate
     
     
     @IBAction func newCollectionBtn(_ sender: Any) {
-        activityIndicator.startAnimating()
+//        activityIndicator.startAnimating()
         newCollectionBtnOutlet.isEnabled = false
         if let imgs = location.images {
             location.removeFromImages(imgs)
@@ -150,9 +158,17 @@ class ImagesCollectionView: UIViewController, NSFetchedResultsControllerDelegate
 
 extension ImagesCollectionView: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print("here we have \(location.images?.count ?? 0)")
         
-        return location.images?.count ?? 0
+        if let count = location.images?.count {
+            if count == 0 {
+                return numberOfImages
+            } else {
+                return count
+            }
+        }
+        
+        return numberOfImages
+//        return location.images?.count == 0 ? 10 : location.images?.count!
         
     }
     
@@ -164,13 +180,37 @@ extension ImagesCollectionView: UICollectionViewDataSource, UICollectionViewDele
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "imgCollectionCell", for: indexPath) as! CollectionViewCell
         
+        cell.image.image = UIImage(systemName: "photo")?.withRenderingMode(.alwaysOriginal)
+        cell.activity.startAnimating()
         
-        
-        if let data = location.images {
-            let array = data.allObjects
-            let photo = array[indexPath.row] as! Images
-            let image: UIImage = UIImage(data: photo.data!)!
-            cell.image.image = image
+        if let images = location.images {
+            if images.count > 0 && images.count > indexPath.row{
+                let index = images.allObjects[indexPath.row] as! Images
+                if let url = index.url {
+                    self.flickerApi.downloadImg(url: url) { data, error in
+                        guard error == nil else {
+                            self.generateAlert(title: "ERROR", message: "something went wrong", actionTitle: "OK")
+                            return
+                        }
+                        
+                        if let data = data {
+                            let img = Images(context: self.dataController.viewContext)
+                            img.data = data
+                            let image: UIImage = UIImage(data: data)!
+                            index.data = data
+                            DispatchQueue.main.async {
+                                cell.image.image = image
+                                cell.activity.stopAnimating()
+//                                self.activityIndicator.stopAnimating()
+                            }
+                            
+                            
+                        } else {
+                            print("data not saved")
+                        }
+                    }
+                }
+            }
         }
         return cell
     }
@@ -181,7 +221,9 @@ extension ImagesCollectionView: UICollectionViewDataSource, UICollectionViewDele
             
             let selected = array[indexPath.row] as! Images
             location.removeFromImages(selected)
-            reloadImages()
+            self.dataController.viewContext.delete(selected)
+            numberOfImages -= 1
+            self.collectionView.reloadData()
         }
     }
     
@@ -196,4 +238,3 @@ extension ImagesCollectionView: UICollectionViewDataSource, UICollectionViewDele
         return CGSize(width: dimension, height: dimension)
     }
 }
-

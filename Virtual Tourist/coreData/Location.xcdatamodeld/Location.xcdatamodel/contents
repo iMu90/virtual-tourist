@@ -3,13 +3,13 @@
     <entity name="GeoLocation" representedClassName="GeoLocation" syncable="YES" codeGenerationType="class">
         <attribute name="latitude" optional="YES" attributeType="String"/>
         <attribute name="longitude" optional="YES" attributeType="String"/>
-        <relationship name="images" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Images" inverseName="location" inverseEntity="Images"/>
+        <relationship name="images" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Images" inverseName="location" inverseEntity="Images"/>
     </entity>
     <entity name="Images" representedClassName="Images" syncable="YES" codeGenerationType="class">
         <attribute name="data" optional="YES" attributeType="Binary"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="url" optional="YES" attributeType="String"/>
-        <relationship name="location" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GeoLocation" inverseName="images" inverseEntity="GeoLocation"/>
+        <relationship name="location" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="GeoLocation" inverseName="images" inverseEntity="GeoLocation"/>
     </entity>
     <elements>
         <element name="GeoLocation" positionX="-248.421875" positionY="-37.12890625" width="128" height="88"/>

@@ -6,7 +6,7 @@
         <relationship name="images" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Images" inverseName="location" inverseEntity="Images"/>
     </entity>
     <entity name="Images" representedClassName="Images" syncable="YES" codeGenerationType="class">
-        <attribute name="data" optional="YES" attributeType="Binary"/>
+        <attribute name="data" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="url" optional="YES" attributeType="String"/>
         <relationship name="location" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="GeoLocation" inverseName="images" inverseEntity="GeoLocation"/>
